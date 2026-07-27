@@ -45,7 +45,8 @@
               "ai-tools/windsurf"
             ]
           }
-        ]
+        ],
+        "hidden": true
       },
       {
         "tab": "API reference",

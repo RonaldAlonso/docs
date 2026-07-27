@@ -50,17 +50,16 @@
       },
       {
         "tab": "API reference",
-        "groups": [
+        "pages": [
           {
             "group": "API documentation",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ],
-            "expanded": true
-          }
+            "expanded": true,
+            "pages": []
+          },
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/webhook",
+          "api-reference/endpoint/delete",
+          "api-reference/endpoint/create"
         ]
       }
     ],

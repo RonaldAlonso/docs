@@ -154,6 +154,65 @@
         }
       }
     },
+    "/ruc/representantes": {
+      "post": {
+        "summary": "Consultar representante de un RUC",
+        "description": "Consulta representante legal por RUC.",
+        "requestBody": {
+          "description": "Datos necesarios para realizar la consulta.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultaRucRepresentanteRequest"
+              },
+              "example": {
+                "ruc": "20123456789"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta realizada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaRucRepresentanteResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "exito",
+                  "data": [
+                    {
+                      "tipo_de_documento": "DNI",
+                      "numero_de_documento": "7*****54",
+                      "nombre": "JUAN *****O ***NA",
+                      "cargo": "GERENTE GENERAL",
+                      "fecha_desde": "05/05/2012"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No se encontró información para el RUC enviado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseRucRepresentante"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No se encontró RUC"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/sunat/guia/xml/{numRuc}-{tipoDocumento}-{numSerieComprobante}-{numDocumentoComprobante}": {
       "get": {
         "summary": "Obtener XML de una guía",
@@ -348,7 +407,7 @@
       "ConsultaRucRequest": {
         "type": "object",
         "required": [
-          "dni"
+          "ruc"
         ],
         "properties": {
           "dni": {
@@ -376,7 +435,7 @@
             "properties": {
               "ruc": {
                 "type": "string",
-                "description": "Número de identificación (RUC)",
+                "description": "Número de identificación (RUC).",
                 "example": "20123456789"
               },
               "nombre_o_razon_social": {
@@ -430,12 +489,80 @@
               "es_buen_contribuyente": {
                 "type": "string",
                 "description": "Indica si está catalogado como buen contribuyente."
-              }             
+              }
             }
           }
         }
       },
       "ErrorResponseRuc": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del error.",
+            "example": "No se encontró RUC"
+          }
+        }
+      },
+      "ConsultaRucRepresentanteRequest": {
+        "type": "object",
+        "required": [
+          "ruc"
+        ],
+        "properties": {
+          "dni": {
+            "type": "string",
+            "description": "Ruc de 11 dígitos a consultar.",
+            "example": "20123456789"
+          }
+        }
+      },
+      "ConsultaRucRepresentanteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado.",
+            "example": "Exito"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "tipo_de_documento": {
+                "type": "string",
+                "description": "Tipo de documento del representate."
+              },
+              "numero_de_documento": {
+                "type": "string",
+                "description": "Numero de documento del representante."
+              },
+              "nombre": {
+                "type": "string",
+                "description": "Nombre del representante"
+              },
+              "cargo": {
+                "type": "string",
+                "description": "Cargo del representate."
+              },
+              "fecha_desde": {
+                "type": "string",
+                "description": "Fecha desde."
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponseRucRepresentante": {
         "type": "object",
         "properties": {
           "success": {

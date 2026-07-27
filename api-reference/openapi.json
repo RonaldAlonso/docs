@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.json.pe"
+      "url": "https://api.json.com.pe"
     }
   ],
   "security": [
@@ -19,7 +19,7 @@
     "/dni": {
       "post": {
         "summary": "Consultar información de un DNI",
-        "description": "Consulta la información asociada a un DNI.",
+        "description": "Consulta la información asociada a un DNI",
         "requestBody": {
           "description": "Datos necesarios para realizar la consulta.",
           "required": true,
@@ -66,7 +66,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "No se encontró información para el DNI enviado.",
             "content": {
               "application/json": {
@@ -86,7 +86,7 @@
     "/ruc": {
       "post": {
         "summary": "Consultar información de un RUC",
-        "description": "Consulta la información asociada a un RUC.",
+        "description": "Consulta la información asociada a un RUC",
         "requestBody": {
           "description": "Datos necesarios para realizar la consulta.",
           "required": true,
@@ -137,7 +137,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "No se encontró información para el RUC enviado.",
             "content": {
               "application/json": {
@@ -157,7 +157,7 @@
     "/ruc/representantes": {
       "post": {
         "summary": "Consultar representante de un RUC",
-        "description": "Consulta representante legal por RUC.",
+        "description": "Consulta representante legal por RUC",
         "requestBody": {
           "description": "Datos necesarios para realizar la consulta.",
           "required": true,
@@ -196,12 +196,96 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "No se encontró información para el RUC enviado.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponseRucRepresentante"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No se encontró RUC"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ruc/establecimientos": {
+      "post": {
+        "summary": "Consultar establecimientos de un RUC",
+        "description": "Consulta establecimientos por RUC",
+        "requestBody": {
+          "description": "Datos necesarios para realizar la consulta.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultaRucEstablecimientosRequest"
+              },
+              "example": {
+                "ruc": "20123456789"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta realizada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaRucEstablecimientosResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "exito",
+                  "data": [
+                    {
+                      "codigo": "0001",
+                      "tipo_establecimiento": "SU. SUCURSAL",
+                      "actividad_economica": "-",
+                      "direccion": "AV. NICOLÁS DE PIÉROLA 789.",
+                      "direccion_completa": "AV. NICOLÁS DE PIÉROLA 789., LIMA - LIMA - CERCADO DE LIMA",
+                      "departamento": "LIMA",
+                      "provincia": "LIMA",
+                      "distrito": "CERCADO DE LIMA",
+                      "ubigeo_sunat": "150101",
+                      "ubigeo": [
+                        "15",
+                        "1501",
+                        "150101"
+                      ]
+                    },
+                    {
+                      "codigo": "0002",
+                      "tipo_establecimiento": "SU. SUCURSAL",
+                      "actividad_economica": "-",
+                      "direccion": "AV. ALFONSO UGARTE 848.",
+                      "direccion_completa": "AV. ALFONSO UGARTE 848., LIMA - LIMA - CERCADO DE LIMA",
+                      "departamento": "LIMA",
+                      "provincia": "LIMA",
+                      "distrito": "LIMA",
+                      "ubigeo_sunat": "150101",
+                      "ubigeo": [
+                        "15",
+                        "1501",
+                        "150101"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontró información para el RUC enviado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseRucEstablecimientos"
                 },
                 "example": {
                   "success": false,
@@ -275,7 +359,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "No se encontró información para el DNI enviado.",
             "content": {
               "application/json": {
@@ -410,7 +494,7 @@
           "ruc"
         ],
         "properties": {
-          "dni": {
+          "ruc": {
             "type": "string",
             "description": "Ruc de 11 dígitos a consultar.",
             "example": "20123456789"
@@ -515,7 +599,7 @@
           "ruc"
         ],
         "properties": {
-          "dni": {
+          "ruc": {
             "type": "string",
             "description": "Ruc de 11 dígitos a consultar.",
             "example": "20123456789"
@@ -548,7 +632,7 @@
               },
               "nombre": {
                 "type": "string",
-                "description": "Nombre del representante"
+                "description": "Nombre del representante."
               },
               "cargo": {
                 "type": "string",
@@ -563,6 +647,94 @@
         }
       },
       "ErrorResponseRucRepresentante": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del error.",
+            "example": "No se encontró RUC"
+          }
+        }
+      },
+      "ConsultaRucEstablecimientosRequest": {
+        "type": "object",
+        "required": [
+          "ruc"
+        ],
+        "properties": {
+          "ruc": {
+            "type": "string",
+            "description": "Ruc de 11 dígitos a consultar.",
+            "example": "20123456789"
+          }
+        }
+      },
+      "ConsultaRucEstablecimientosResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado.",
+            "example": "Exito"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "codigo": {
+                "type": "string",
+                "description": "Codigo del local."
+              },
+              "tipo_establecimiento": {
+                "type": "string",
+                "description": "Tipo de establecimiento del local."
+              },
+              "actividad_economica": {
+                "type": "string",
+                "description": "Actividad economica del local."
+              },
+              "departamento": {
+                "type": "string",
+                "description": "Departamento del local."
+              },
+              "provincia": {
+                "type": "string",
+                "description": "Provincia del local."
+              },
+              "distrito": {
+                "type": "string",
+                "description": "Distrito del local."
+              },
+              "direccion": {
+                "type": "string",
+                "description": "Dirección específica."
+              },
+              "direccion_completa": {
+                "type": "string",
+                "description": "Dirección completa, incluyendo distrito, provincia y departamento."
+              },
+              "ubigeo_sunat": {
+                "type": "string",
+                "description": "Ubigeo según SUNAT."
+              },
+              "ubigeo": {
+                "type": "array",
+                "description": "Ubigeo desglosado por componentes."
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponseRucEstablecimientos": {
         "type": "object",
         "properties": {
           "success": {

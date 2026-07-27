@@ -29,8 +29,7 @@
                 "$ref": "#/components/schemas/ConsultaDniRequest"
               },
               "example": {
-                "dni": "54545455",
-                "usuario": "jhon"
+                "dni": "12345678"
               }
             }
           }
@@ -47,8 +46,16 @@
                   "success": true,
                   "message": "Exito",
                   "data": {
-                    "numero": "27427864",
-                    "nombre_completo": "CASTILLO TERRONES, JOSE PEDRO",
+                    "numero": "12345678",
+                    "nombre_completo": "PEREZ GOMEZ, JUAN JOSE",
+                    "nombres": "JUAN JOSE",
+                    "apellido_paterno": "PEREZ",
+                    "apellido_materno": "GOMEZ",
+                    "codigo_verificacion": 9,
+                    "direccion": "",
+                    "direccion_completa": "",
+                    "ubigeo_reniec": "",
+                    "ubigeo_sunat": "",
                     "ubigeo": [
                       null,
                       null,
@@ -64,7 +71,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ErrorResponseDNI"
                 },
                 "example": {
                   "success": false,
@@ -137,6 +144,20 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "No se encontró información para el DNI enviado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseXML"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Bad Request"
+                }
+              }
+            }
           }
         }
       }
@@ -147,19 +168,13 @@
       "ConsultaDniRequest": {
         "type": "object",
         "required": [
-          "dni",
-          "usuario"
+          "dni"
         ],
         "properties": {
           "dni": {
             "type": "string",
             "description": "DNI de 8 dígitos del titular a consultar.",
-            "example": "54545455"
-          },
-          "usuario": {
-            "type": "string",
-            "description": "Usuario que realiza la consulta.",
-            "example": "jhon"
+            "example": "12345678"
           }
         }
       },
@@ -187,7 +202,7 @@
               "nombre_completo": {
                 "type": "string",
                 "description": "Nombre completo del titular.",
-                "example": "CASTILLO TERRONES, JOSE PEDRO"
+                "example": "PEREZ GOMEZ, JUAN JOSE"
               },
               "ubigeo": {
                 "type": "array",
@@ -208,7 +223,7 @@
           }
         }
       },
-      "ErrorResponse": {
+      "ErrorResponseDNI": {
         "type": "object",
         "properties": {
           "success": {
@@ -240,6 +255,20 @@
             "type": "string",
             "description": "Contenido XML codificado o serializado.",
             "example": "PERlc3BhdGNoQWR2aWNl..."
+          }
+        }
+      },
+      "ErrorResponseXML": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Estado de la solicitud."
           }
         }
       }

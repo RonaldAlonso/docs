@@ -25,26 +25,11 @@
         ]
       },
       {
-        "group": "GET",
+        "group": "API Consulta",
         "pages": [
-          "api-reference/endpoint/get"
-        ]
-      },
-      {
-        "group": "POST",
-        "pages": [
-          "api-reference/endpoint/create"
-        ]
-      },
-      {
-        "group": "PUT",
-        "pages": [
-          "api-reference/endpoint/update"
-        ]
-      },
-      {
-        "group": "DELETE",
-        "pages": [
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/update",
           "api-reference/endpoint/delete"
         ]
       }

@@ -9,23 +9,29 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "JSON.COM.PE",
+          "href": "https://json.com.pe",
+          "icon": "globe"
+        },
+        {
+          "anchor": "GENERAR TOKEN",
+          "href": "https://app.json.com.pe/login",
+          "icon": "right-to-bracket"
+        }
+      ]
+    },
     "groups": [
       {
-        "group": "Getting started",
+        "group": "INTRODUCCIÓN",
         "pages": [
-          "index",
-          "quickstart",
-          "development"
+          "index"
         ]
       },
       {
-        "group": "API documentation",
-        "pages": [
-          "api-reference/introduction"
-        ]
-      },
-      {
-        "group": "API Consulta",
+        "group": "API CONSULTA",
         "pages": [
           "api-reference/endpoint/dni",
           "api-reference/endpoint/ruc",
@@ -50,7 +56,19 @@
           "api-reference/endpoint/descarga-guia-xml",
           "api-reference/endpoint/descarga-guia-json",
           "api-reference/endpoint/comisiones-afp"
-          
+        ]
+      },
+      {
+        "group": "API RECIBO",
+        "pages": [
+          "api-reference/endpoint/luz",
+          "api-reference/endpoint/sedapal"
+        ]
+      },
+      {
+        "group": "INTEGRACIONES",
+        "pages": [
+          "api-reference/introduction"
         ]
       }
     ]

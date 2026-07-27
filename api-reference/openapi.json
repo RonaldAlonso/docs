@@ -83,6 +83,77 @@
         }
       }
     },
+    "/ruc": {
+      "post": {
+        "summary": "Consultar información de un RUC",
+        "description": "Consulta la información asociada a un RUC.",
+        "requestBody": {
+          "description": "Datos necesarios para realizar la consulta.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultaRucRequest"
+              },
+              "example": {
+                "ruc": "20123456789"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta realizada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaRucResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "exito",
+                  "data": {
+                    "ruc": "20123456789",
+                    "nombre_o_razon_social": "HAMID S.A.C.",
+                    "estado": "SUSPENSION TEMPORAL",
+                    "condicion": "HABIDO",
+                    "departamento": "LIMA",
+                    "provincia": "LIMA",
+                    "distrito": "CERCADO DE LIMA",
+                    "direccion": "AV. NICOLÁS DE PIÉROLA 789.",
+                    "direccion_completa": "AV. NICOLÁS DE PIÉROLA 789., LIMA - LIMA - CERCADO DE LIMA",
+                    "ubigeo_sunat": "150137",
+                    "ubigeo": [
+                      "15",
+                      "1501",
+                      "150101"
+                    ],
+                    "es_agente_de_retencion": "NO",
+                    "es_agente_de_percepcion": "NO",
+                    "es_agente_de_percepcion_combustible": "NO",
+                    "es_buen_contribuyente": "SI"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No se encontró información para el RUC enviado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseRuc"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No se encontró RUC"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/sunat/guia/xml/{numRuc}-{tipoDocumento}-{numSerieComprobante}-{numDocumentoComprobante}": {
       "get": {
         "summary": "Obtener XML de una guía",
@@ -204,6 +275,42 @@
                 "description": "Nombre completo del titular.",
                 "example": "PEREZ GOMEZ, JUAN JOSE"
               },
+              "nombres": {
+                "type": "string",
+                "description": "Nombres de pila de la persona.",
+                "example": "JUAN JOSE"
+              },
+              "apellido_paterno": {
+                "type": "string",
+                "description": "Primer apellido (apellido paterno) de la persona.",
+                "example": "PEREZ"
+              },
+              "apellido_materno": {
+                "type": "string",
+                "description": "Segundo apellido (apellido materno) de la persona.",
+                "example": "GOMEZ"
+              },
+              "codigo_verificacion": {
+                "type": "string",
+                "description": "Código de verificación del DNI (dígito verificador).",
+                "example": "9"
+              },
+              "direccion": {
+                "type": "string",
+                "description": "Dirección de la persona."
+              },
+              "direccion_completa": {
+                "type": "string",
+                "description": "Dirección completa de la persona."
+              },
+              "ubigeo_reniec": {
+                "type": "string",
+                "description": "Ubigeo según RENIEC."
+              },
+              "ubigeo_sunat": {
+                "type": "string",
+                "description": "Ubigeo según SUNAT."
+              },
               "ubigeo": {
                 "type": "array",
                 "description": "Información del ubigeo asociada al titular.",
@@ -235,6 +342,98 @@
             "type": "string",
             "description": "Mensaje descriptivo del error.",
             "example": "No se encontró DNI"
+          }
+        }
+      },
+      "ConsultaRucResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del resultado.",
+            "example": "Exito"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "ruc": {
+                "type": "string",
+                "description": "Número de identificación (RUC)",
+                "example": "20123456789"
+              },
+              "nombre_o_razon_social": {
+                "type": "string",
+                "description": "Nombre o Razon Social de la empresa."
+              },
+              "estado": {
+                "type": "string",
+                "description": "Estado de la empresa."
+              },
+              "condicion": {
+                "type": "string",
+                "description": "Condición de la empresa."
+              },
+              "departamento": {
+                "type": "string",
+                "description": "Departamento de la empresa."
+              },
+              "provincia": {
+                "type": "string",
+                "description": "CProvincia de la empresa."
+              },
+              "distrito": {
+                "type": "string",
+                "description": "Distrito de la empresa."
+              },
+              "direccion": {
+                "type": "string",
+                "description": "Dirección específica."
+              },
+              "ubigeo_sunat": {
+                "type": "string",
+                "description": "Ubigeo según SUNAT."
+              },
+              "ubigeo": {
+                "type": "string",
+                "description": "Ubigeo desglosado por componentes."
+              },
+              "es_agente_de_retencion": {
+                "type": "string",
+                "description": "Indica si es agente de percepción."
+              },
+              "es_agente_de_percepcion": {
+                "type": "string",
+                "description": "Indica si es agente de percepción."
+              },
+              "es_agente_de_percepcion_combustible": {
+                "type": "string",
+                "description": "Indica si es agente de percepción de combustibles."
+              },
+              "es_buen_contribuyente": {
+                "type": "string",
+                "description": "Indica si está catalogado como buen contribuyente."
+              }             
+            }
+          }
+        }
+      },
+      "ErrorResponseRuc": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la consulta fue exitosa.",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje descriptivo del error.",
+            "example": "No se encontró RUC"
           }
         }
       },

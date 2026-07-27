@@ -49,20 +49,19 @@
         "hidden": true
       },
       {
-        "group": "API documentation",
-        "pages": [
-          "api-reference/introduction"
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API documentation",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
+            ],
+            "expanded": true
+          }
         ]
-      },
-      {
-        "group": "Endpoint examples",
-        "pages": [
-          "api-reference/endpoint/get",
-          "api-reference/endpoint/create",
-          "api-reference/endpoint/delete",
-          "api-reference/endpoint/webhook"
-        ],
-        "expanded": true
       }
     ],
     "global": {

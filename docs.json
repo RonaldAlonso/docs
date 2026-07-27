@@ -35,7 +35,7 @@
           "api-reference/endpoint/ruc-deuda-coactiva",
           "api-reference/endpoint/ruc-trabajadores",
           "api-reference/endpoint/ruc-omisiones-tributarias",
-          "api-reference/endpoint/razon-social",
+          "api-reference/endpoint/ruc-razon-social",
           "api-reference/endpoint/tipo-cambio",
           "api-reference/endpoint/dni-ruc",
           "api-reference/endpoint/consulta-cpe",
@@ -46,7 +46,7 @@
           "api-reference/endpoint/revision-tecnica",
           "api-reference/endpoint/licencia-conducir",
           "api-reference/endpoint/descargar-xml",
-          "api-reference/endpoint/xmf-pdf",
+          "api-reference/endpoint/xml-pdf",
           "api-reference/endpoint/descarga-guia-xml",
           "api-reference/endpoint/descarga-guia-json",
           "api-reference/endpoint/comisiones-afp"

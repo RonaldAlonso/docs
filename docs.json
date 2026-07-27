@@ -45,7 +45,8 @@
               "ai-tools/windsurf"
             ]
           }
-        ]
+        ],
+        "hidden": true
       },
       {
         "tab": "API reference",
@@ -63,7 +64,8 @@
               "api-reference/endpoint/create",
               "api-reference/endpoint/delete",
               "api-reference/endpoint/webhook"
-            ]
+            ],
+            "expanded": true
           }
         ]
       }

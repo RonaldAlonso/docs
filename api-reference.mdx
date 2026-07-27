@@ -1,0 +1,1024 @@
+---
+title: "REST API Reference — Complete Endpoint Documentation Template"
+sidebarTitle: "API Reference"
+description: "Full REST API documentation template covering GET, POST, PUT, and DELETE endpoints with code examples in PHP, JavaScript, Python, and cURL."
+---
+
+This reference documents all available endpoints for the REST API. Use the tabs below to navigate by HTTP method, then select an endpoint to view full documentation including authentication requirements, request parameters, example payloads, and code samples in PHP, JavaScript, Python, and cURL.
+
+<Info>
+  **Base URL:** `https://api.example.com`  
+  Most endpoints require a Bearer token in the `Authorization` header. Obtain your token via `POST /api/auth/login`.
+</Info>
+
+<Tabs>
+  <Tab title="🟢 GET">
+
+## GET /api/users — Obtener usuarios
+
+Retorna la lista completa de usuarios registrados. Admite paginación mediante parámetros de consulta.
+
+<Note>
+  **Autenticación requerida.** Incluye el token Bearer en el header `Authorization`.
+</Note>
+
+**URL de la petición**
+```
+GET https://api.example.com/api/users
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Authorization` | `Bearer {token}` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros de consulta (Query Parameters)**
+
+<ParamField query="page" type="integer">
+  Número de página. Por defecto: `1`.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Número de resultados por página. Por defecto: `15`. Máximo: `100`.
+</ParamField>
+
+<ParamField query="search" type="string">
+  Filtra usuarios por nombre o correo electrónico.
+</ParamField>
+
+**Respuesta exitosa — 200 OK**
+
+```json Respuesta
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Ana García",
+      "email": "ana.garcia@example.com",
+      "role": "admin",
+      "created_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Carlos López",
+      "email": "carlos.lopez@example.com",
+      "role": "user",
+      "created_at": "2024-02-20T14:45:00Z"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "per_page": 15,
+    "total": 87,
+    "last_page": 6
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `401 Unauthorized` | Token no proporcionado o inválido |
+| `403 Forbidden` | No tienes permisos para listar usuarios |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php GET /api/users — PHP
+<?php
+
+$token = 'tu_token_aqui';
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => 'https://api.example.com/api/users?page=1&per_page=15',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer ' . $token,
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);
+```
+
+```javascript GET /api/users — JavaScript
+const token = 'tu_token_aqui';
+
+const response = await fetch(
+  'https://api.example.com/api/users?page=1&per_page=15',
+  {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+    },
+  }
+);
+
+if (!response.ok) {
+  throw new Error(`HTTP error: ${response.status}`);
+}
+
+const data = await response.json();
+console.log(data);
+```
+
+```python GET /api/users — Python
+import requests
+
+token = 'tu_token_aqui'
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Accept': 'application/json',
+}
+
+params = {
+    'page': 1,
+    'per_page': 15,
+}
+
+response = requests.get(
+    'https://api.example.com/api/users',
+    headers=headers,
+    params=params,
+)
+
+response.raise_for_status()
+data = response.json()
+print(data)
+```
+
+```bash GET /api/users — cURL
+curl -X GET \
+  'https://api.example.com/api/users?page=1&per_page=15' \
+  -H 'Authorization: Bearer tu_token_aqui' \
+  -H 'Accept: application/json'
+```
+
+</CodeGroup>
+
+---
+
+## GET /api/users/{id} — Obtener usuario por ID
+
+Retorna los datos de un usuario específico identificado por su `id`.
+
+<Note>
+  **Autenticación requerida.** Incluye el token Bearer en el header `Authorization`.
+</Note>
+
+**URL de la petición**
+```
+GET https://api.example.com/api/users/{id}
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Authorization` | `Bearer {token}` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros de ruta (Path Parameters)**
+
+<ParamField path="id" type="integer" required>
+  ID único del usuario. Ejemplo: `1`.
+</ParamField>
+
+**Respuesta exitosa — 200 OK**
+
+```json Respuesta
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "name": "Ana García",
+    "email": "ana.garcia@example.com",
+    "role": "admin",
+    "phone": "+34 600 123 456",
+    "address": "Calle Mayor 10, Madrid",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-03-01T09:00:00Z"
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `401 Unauthorized` | Token no proporcionado o inválido |
+| `403 Forbidden` | No tienes permisos para ver este usuario |
+| `404 Not Found` | No existe un usuario con el ID proporcionado |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php GET /api/users/{id} — PHP
+<?php
+
+$token  = 'tu_token_aqui';
+$userId = 1;
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => "https://api.example.com/api/users/{$userId}",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer ' . $token,
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);
+```
+
+```javascript GET /api/users/{id} — JavaScript
+const token  = 'tu_token_aqui';
+const userId = 1;
+
+const response = await fetch(
+  `https://api.example.com/api/users/${userId}`,
+  {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+    },
+  }
+);
+
+if (!response.ok) {
+  throw new Error(`HTTP error: ${response.status}`);
+}
+
+const data = await response.json();
+console.log(data);
+```
+
+```python GET /api/users/{id} — Python
+import requests
+
+token   = 'tu_token_aqui'
+user_id = 1
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Accept': 'application/json',
+}
+
+response = requests.get(
+    f'https://api.example.com/api/users/{user_id}',
+    headers=headers,
+)
+
+response.raise_for_status()
+data = response.json()
+print(data)
+```
+
+```bash GET /api/users/{id} — cURL
+curl -X GET \
+  'https://api.example.com/api/users/1' \
+  -H 'Authorization: Bearer tu_token_aqui' \
+  -H 'Accept: application/json'
+```
+
+</CodeGroup>
+
+  </Tab>
+
+  <Tab title="🔵 POST">
+
+## POST /api/users — Crear usuario
+
+Crea un nuevo usuario en el sistema. Devuelve el objeto del usuario creado con su ID asignado.
+
+<Note>
+  **Autenticación requerida.** Solo usuarios con rol `admin` pueden crear nuevos usuarios.
+</Note>
+
+**URL de la petición**
+```
+POST https://api.example.com/api/users
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Authorization` | `Bearer {token}` | ✅ Sí |
+| `Content-Type` | `application/json` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros del cuerpo (Body Parameters)**
+
+<ParamField body="name" type="string" required>
+  Nombre completo del usuario. Mínimo 2 caracteres, máximo 100.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Correo electrónico único del usuario. Debe ser un email válido.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Contraseña del usuario. Mínimo 8 caracteres. Debe incluir letras y números.
+</ParamField>
+
+<ParamField body="role" type="string">
+  Rol del usuario. Valores: `admin`, `user`. Por defecto: `user`.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Número de teléfono del usuario. Formato: `+34 600 000 000`.
+</ParamField>
+
+**Cuerpo de la petición**
+
+```json Cuerpo JSON
+{
+  "name": "María Fernández",
+  "email": "maria.fernandez@example.com",
+  "password": "SecurePass123",
+  "role": "user",
+  "phone": "+34 611 222 333"
+}
+```
+
+**Respuesta exitosa — 201 Created**
+
+```json Respuesta
+{
+  "status": "success",
+  "message": "Usuario creado correctamente",
+  "data": {
+    "id": 42,
+    "name": "María Fernández",
+    "email": "maria.fernandez@example.com",
+    "role": "user",
+    "phone": "+34 611 222 333",
+    "created_at": "2024-04-10T12:00:00Z"
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `400 Bad Request` | Datos inválidos o incompletos en el cuerpo |
+| `401 Unauthorized` | Token no proporcionado o inválido |
+| `403 Forbidden` | No tienes permisos para crear usuarios |
+| `409 Conflict` | Ya existe un usuario con ese correo electrónico |
+| `422 Unprocessable Entity` | Error de validación en los campos enviados |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php POST /api/users — PHP
+<?php
+
+$token = 'tu_token_aqui';
+
+$body = [
+    'name'     => 'María Fernández',
+    'email'    => 'maria.fernandez@example.com',
+    'password' => 'SecurePass123',
+    'role'     => 'user',
+    'phone'    => '+34 611 222 333',
+];
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => 'https://api.example.com/api/users',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST           => true,
+    CURLOPT_POSTFIELDS     => json_encode($body),
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer ' . $token,
+        'Content-Type: application/json',
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);
+```
+
+```javascript POST /api/users — JavaScript
+const token = 'tu_token_aqui';
+
+const body = {
+  name:     'María Fernández',
+  email:    'maria.fernandez@example.com',
+  password: 'SecurePass123',
+  role:     'user',
+  phone:    '+34 611 222 333',
+};
+
+const response = await fetch('https://api.example.com/api/users', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type':  'application/json',
+    'Accept':        'application/json',
+  },
+  body: JSON.stringify(body),
+});
+
+if (!response.ok) {
+  const error = await response.json();
+  throw new Error(error.message);
+}
+
+const data = await response.json();
+console.log(data);
+```
+
+```python POST /api/users — Python
+import requests
+
+token = 'tu_token_aqui'
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+}
+
+body = {
+    'name':     'María Fernández',
+    'email':    'maria.fernandez@example.com',
+    'password': 'SecurePass123',
+    'role':     'user',
+    'phone':    '+34 611 222 333',
+}
+
+response = requests.post(
+    'https://api.example.com/api/users',
+    headers=headers,
+    json=body,
+)
+
+response.raise_for_status()
+data = response.json()
+print(data)
+```
+
+```bash POST /api/users — cURL
+curl -X POST \
+  'https://api.example.com/api/users' \
+  -H 'Authorization: Bearer tu_token_aqui' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "name": "María Fernández",
+    "email": "maria.fernandez@example.com",
+    "password": "SecurePass123",
+    "role": "user",
+    "phone": "+34 611 222 333"
+  }'
+```
+
+</CodeGroup>
+
+---
+
+## POST /api/auth/login — Iniciar sesión
+
+Autentica un usuario con sus credenciales y devuelve un token Bearer para usar en las demás peticiones.
+
+<Info>
+  **No requiere autenticación.** Este es el endpoint público para obtener tu token de acceso.
+</Info>
+
+**URL de la petición**
+```
+POST https://api.example.com/api/auth/login
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Content-Type` | `application/json` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros del cuerpo (Body Parameters)**
+
+<ParamField body="email" type="string" required>
+  Correo electrónico del usuario registrado.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Contraseña del usuario.
+</ParamField>
+
+**Cuerpo de la petición**
+
+```json Cuerpo JSON
+{
+  "email": "ana.garcia@example.com",
+  "password": "SecurePass123"
+}
+```
+
+**Respuesta exitosa — 200 OK**
+
+```json Respuesta
+{
+  "status": "success",
+  "message": "Autenticación correcta",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IkFuYSBHYXJjw61hIiwiaWF0IjoxNzEyNzQ5NjAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "user": {
+      "id": 1,
+      "name": "Ana García",
+      "email": "ana.garcia@example.com",
+      "role": "admin"
+    }
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `400 Bad Request` | Faltan campos obligatorios |
+| `401 Unauthorized` | Credenciales incorrectas (email o contraseña inválidos) |
+| `429 Too Many Requests` | Demasiados intentos. Espera antes de volver a intentarlo |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php POST /api/auth/login — PHP
+<?php
+
+$body = [
+    'email'    => 'ana.garcia@example.com',
+    'password' => 'SecurePass123',
+];
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => 'https://api.example.com/api/auth/login',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST           => true,
+    CURLOPT_POSTFIELDS     => json_encode($body),
+    CURLOPT_HTTPHEADER     => [
+        'Content-Type: application/json',
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+$data  = json_decode($response, true);
+$token = $data['data']['token'];
+echo "Token: {$token}\n";
+```
+
+```javascript POST /api/auth/login — JavaScript
+const body = {
+  email:    'ana.garcia@example.com',
+  password: 'SecurePass123',
+};
+
+const response = await fetch('https://api.example.com/api/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept':       'application/json',
+  },
+  body: JSON.stringify(body),
+});
+
+if (!response.ok) {
+  const error = await response.json();
+  throw new Error(error.message);
+}
+
+const data  = await response.json();
+const token = data.data.token;
+console.log('Token:', token);
+```
+
+```python POST /api/auth/login — Python
+import requests
+
+headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+}
+
+body = {
+    'email':    'ana.garcia@example.com',
+    'password': 'SecurePass123',
+}
+
+response = requests.post(
+    'https://api.example.com/api/auth/login',
+    headers=headers,
+    json=body,
+)
+
+response.raise_for_status()
+data  = response.json()
+token = data['data']['token']
+print(f'Token: {token}')
+```
+
+```bash POST /api/auth/login — cURL
+curl -X POST \
+  'https://api.example.com/api/auth/login' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "email": "ana.garcia@example.com",
+    "password": "SecurePass123"
+  }'
+```
+
+</CodeGroup>
+
+  </Tab>
+
+  <Tab title="🟡 PUT">
+
+## PUT /api/users/{id} — Actualizar usuario
+
+Actualiza los datos de un usuario existente. Puedes enviar solo los campos que deseas modificar (actualización parcial).
+
+<Note>
+  **Autenticación requerida.** Los usuarios con rol `user` solo pueden actualizar su propio perfil. Los `admin` pueden actualizar cualquier usuario.
+</Note>
+
+**URL de la petición**
+```
+PUT https://api.example.com/api/users/{id}
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Authorization` | `Bearer {token}` | ✅ Sí |
+| `Content-Type` | `application/json` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros de ruta (Path Parameters)**
+
+<ParamField path="id" type="integer" required>
+  ID único del usuario a actualizar.
+</ParamField>
+
+**Parámetros del cuerpo (Body Parameters)**
+
+<ParamField body="name" type="string">
+  Nombre completo del usuario. Mínimo 2 caracteres, máximo 100.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Nuevo correo electrónico. Debe ser único en el sistema.
+</ParamField>
+
+<ParamField body="password" type="string">
+  Nueva contraseña. Mínimo 8 caracteres con letras y números.
+</ParamField>
+
+<ParamField body="role" type="string">
+  Rol del usuario. Valores: `admin`, `user`. Solo modificable por administradores.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Número de teléfono actualizado.
+</ParamField>
+
+<ParamField body="address" type="string">
+  Dirección postal del usuario.
+</ParamField>
+
+**Cuerpo de la petición**
+
+```json Cuerpo JSON
+{
+  "name": "Ana García Ruiz",
+  "phone": "+34 622 333 444",
+  "address": "Avenida Diagonal 100, Barcelona"
+}
+```
+
+**Respuesta exitosa — 200 OK**
+
+```json Respuesta
+{
+  "status": "success",
+  "message": "Usuario actualizado correctamente",
+  "data": {
+    "id": 1,
+    "name": "Ana García Ruiz",
+    "email": "ana.garcia@example.com",
+    "role": "admin",
+    "phone": "+34 622 333 444",
+    "address": "Avenida Diagonal 100, Barcelona",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-04-10T15:20:00Z"
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `400 Bad Request` | Datos inválidos en el cuerpo de la petición |
+| `401 Unauthorized` | Token no proporcionado o inválido |
+| `403 Forbidden` | No tienes permisos para modificar este usuario |
+| `404 Not Found` | No existe un usuario con el ID proporcionado |
+| `409 Conflict` | El nuevo correo electrónico ya está en uso |
+| `422 Unprocessable Entity` | Error de validación en los campos enviados |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php PUT /api/users/{id} — PHP
+<?php
+
+$token  = 'tu_token_aqui';
+$userId = 1;
+
+$body = [
+    'name'    => 'Ana García Ruiz',
+    'phone'   => '+34 622 333 444',
+    'address' => 'Avenida Diagonal 100, Barcelona',
+];
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => "https://api.example.com/api/users/{$userId}",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_CUSTOMREQUEST  => 'PUT',
+    CURLOPT_POSTFIELDS     => json_encode($body),
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer ' . $token,
+        'Content-Type: application/json',
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);
+```
+
+```javascript PUT /api/users/{id} — JavaScript
+const token  = 'tu_token_aqui';
+const userId = 1;
+
+const body = {
+  name:    'Ana García Ruiz',
+  phone:   '+34 622 333 444',
+  address: 'Avenida Diagonal 100, Barcelona',
+};
+
+const response = await fetch(
+  `https://api.example.com/api/users/${userId}`,
+  {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type':  'application/json',
+      'Accept':        'application/json',
+    },
+    body: JSON.stringify(body),
+  }
+);
+
+if (!response.ok) {
+  const error = await response.json();
+  throw new Error(error.message);
+}
+
+const data = await response.json();
+console.log(data);
+```
+
+```python PUT /api/users/{id} — Python
+import requests
+
+token   = 'tu_token_aqui'
+user_id = 1
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+}
+
+body = {
+    'name':    'Ana García Ruiz',
+    'phone':   '+34 622 333 444',
+    'address': 'Avenida Diagonal 100, Barcelona',
+}
+
+response = requests.put(
+    f'https://api.example.com/api/users/{user_id}',
+    headers=headers,
+    json=body,
+)
+
+response.raise_for_status()
+data = response.json()
+print(data)
+```
+
+```bash PUT /api/users/{id} — cURL
+curl -X PUT \
+  'https://api.example.com/api/users/1' \
+  -H 'Authorization: Bearer tu_token_aqui' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "name": "Ana García Ruiz",
+    "phone": "+34 622 333 444",
+    "address": "Avenida Diagonal 100, Barcelona"
+  }'
+```
+
+</CodeGroup>
+
+  </Tab>
+
+  <Tab title="🔴 DELETE">
+
+## DELETE /api/users/{id} — Eliminar usuario
+
+Elimina de forma permanente un usuario del sistema. Esta acción no se puede deshacer.
+
+<Warning>
+  **Acción irreversible.** Una vez eliminado, el usuario y todos sus datos asociados se perderán permanentemente. Solo los administradores pueden realizar esta operación.
+</Warning>
+
+**URL de la petición**
+```
+DELETE https://api.example.com/api/users/{id}
+```
+
+**Headers**
+
+| Header | Valor | Obligatorio |
+|--------|-------|-------------|
+| `Authorization` | `Bearer {token}` | ✅ Sí |
+| `Accept` | `application/json` | ✅ Sí |
+
+**Parámetros de ruta (Path Parameters)**
+
+<ParamField path="id" type="integer" required>
+  ID único del usuario a eliminar.
+</ParamField>
+
+**Respuesta exitosa — 200 OK**
+
+```json Respuesta
+{
+  "status": "success",
+  "message": "Usuario eliminado correctamente",
+  "data": {
+    "id": 42,
+    "deleted_at": "2024-04-10T16:30:00Z"
+  }
+}
+```
+
+**Códigos de error**
+
+| Código | Descripción |
+|--------|-------------|
+| `401 Unauthorized` | Token no proporcionado o inválido |
+| `403 Forbidden` | No tienes permisos para eliminar usuarios |
+| `404 Not Found` | No existe un usuario con el ID proporcionado |
+| `409 Conflict` | El usuario no puede eliminarse porque tiene recursos activos |
+| `500 Internal Server Error` | Error interno del servidor |
+
+**Ejemplos de código**
+
+<CodeGroup>
+
+```php DELETE /api/users/{id} — PHP
+<?php
+
+$token  = 'tu_token_aqui';
+$userId = 42;
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => "https://api.example.com/api/users/{$userId}",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_CUSTOMREQUEST  => 'DELETE',
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer ' . $token,
+        'Accept: application/json',
+    ],
+]);
+
+$response = curl_exec($ch);
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);
+```
+
+```javascript DELETE /api/users/{id} — JavaScript
+const token  = 'tu_token_aqui';
+const userId = 42;
+
+const response = await fetch(
+  `https://api.example.com/api/users/${userId}`,
+  {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept':        'application/json',
+    },
+  }
+);
+
+if (!response.ok) {
+  const error = await response.json();
+  throw new Error(error.message);
+}
+
+const data = await response.json();
+console.log(data);
+```
+
+```python DELETE /api/users/{id} — Python
+import requests
+
+token   = 'tu_token_aqui'
+user_id = 42
+
+headers = {
+    'Authorization': f'Bearer {token}',
+    'Accept': 'application/json',
+}
+
+response = requests.delete(
+    f'https://api.example.com/api/users/{user_id}',
+    headers=headers,
+)
+
+response.raise_for_status()
+data = response.json()
+print(data)
+```
+
+```bash DELETE /api/users/{id} — cURL
+curl -X DELETE \
+  'https://api.example.com/api/users/42' \
+  -H 'Authorization: Bearer tu_token_aqui' \
+  -H 'Accept: application/json'
+```
+
+</CodeGroup>
+
+  </Tab>
+</Tabs>

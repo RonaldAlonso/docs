@@ -345,6 +345,19 @@
           }
         }
       },
+      "ConsultaRucRequest": {
+        "type": "object",
+        "required": [
+          "dni"
+        ],
+        "properties": {
+          "dni": {
+            "type": "string",
+            "description": "Ruc de 11 dígitos a consultar.",
+            "example": "20123456789"
+          }
+        }
+      },
       "ConsultaRucResponse": {
         "type": "object",
         "properties": {
